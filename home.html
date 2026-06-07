@@ -20,24 +20,33 @@
     </style>
 </head>
 <body>
+
     <div class="header">
         <div class="logo">SelfEdu<span>_Ai</span></div>
         <div class="slogan">Kelajagingni bugun yarat</div>
-        <div class="user-info">Salom, <b><span id="display-name"></span></b>! <button class="logout-btn" onclick="chiqish()">Chiqish ➔</button></div>
+        <div class="user-info">
+            Salom, <b><span id="display-name"></span></b>! 
+            <button class="logout-btn" onclick="chiqish()">Chiqish ➔</button>
+        </div>
     </div>
+
     <div class="main">
         <h1>Fanlarni tanlang</h1>
         <div class="fanlar-grid" id="fanlar-container"></div>
     </div>
+
     <script>
+        // Foydalanuvchi ismini chiqarish
         document.getElementById('display-name').innerText = localStorage.getItem('user_name') || "Talaba";
         
+        // Rasmlar lug'ati (fayl nomlari)
         const fanRasmlari = {
             "Biologiya": "biologiya.png",
             "Tarix": "tarix.jpg",
             "O'zbek tili": "uzb.png"
         };
 
+        // Backenddan fanlarni yuklash
         fetch('https://selfedu-backend.onrender.com/data')
         .then(res => res.json())
         .then(data => {
@@ -45,11 +54,15 @@
             data.fanlar.forEach(fan => {
                 container.innerHTML += `
                     <div class="card" onclick="alert('${fan} fani tanlandi!')">
-                        <img src="${fanRasmlari[fan]}" alt="${fan}">
+                        <img src="${fanRasmlari[fan] || 'https://via.placeholder.com/80'}" alt="${fan}">
                         <h3>${fan}</h3>
+                        <p>Darslarni boshlash</p>
                     </div>
                 `;
             });
+        })
+        .catch(err => {
+            console.error("Ma'lumot yuklashda xatolik:", err);
         });
 
         function chiqish() {
